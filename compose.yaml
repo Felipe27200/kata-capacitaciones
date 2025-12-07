@@ -1,0 +1,28 @@
+services:
+  auth-db:
+    image: postgres
+    ports: 
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root123
+      POSTGRES_DB: authentication
+    volumes:
+      - auth-postgres-data:/var/lib/postgres
+    networks:
+      - kata-network
+    # Healthcheck configuration for PostgreSQL
+    healthcheck:
+      # CMD-SHELL uses pg_isready to check if the DB is accepting connections.
+      # -U specifies the user, -d specifies the database name.
+      test: [ "CMD-SHELL", "pg_isready -U root -d authentication" ] 
+      interval: 10s # Check frequency: every 10 seconds
+      timeout: 5s # Wait up to 5 seconds for a response
+      retries: 5 # Number of consecutive failures before marking as 'unhealthy'
+
+volumes:
+  auth-postgres-data:
+
+networks:
+  kata-network:
+    driver: bridge
