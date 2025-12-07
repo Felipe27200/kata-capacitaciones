@@ -14,16 +14,16 @@ public class DataLoader implements CommandLineRunner
 
     @Override
     public void run(String... args) throws Exception {
-        if (roleRepository.findByName("ROLE_STUDENT").isEmpty()) {
+        if (roleRepository.findByName("STUDENT").isEmpty()) {
             Role role = new Role();
-            role.setName("ROLE_STUDENT");
+            role.setName("STUDENT");
 
             roleRepository.save(role);
         }
 
-        if (roleRepository.findByName("ROLE_ADMIN").isEmpty()) {
+        if (roleRepository.findByName("ADMIN").isEmpty()) {
             Role role = new Role();
-            role.setName("ROLE_ADMIN");
+            role.setName("ADMIN");
 
             roleRepository.save(role);
         }
