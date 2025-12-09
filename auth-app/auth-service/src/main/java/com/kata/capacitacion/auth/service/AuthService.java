@@ -3,6 +3,8 @@ package com.kata.capacitacion.auth.service;
 import com.kata.capacitacion.auth.entity.User;
 import com.kata.capacitacion.auth.repository.RoleRepository;
 import com.kata.capacitacion.auth.repository.UserRepository;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
 import dto.user.CreateUserDTO;
 import dto.user.UserDTO;
 import dto.login.LoginRequestDTO;
@@ -15,6 +17,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jose.jws.JwsAlgorithms;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
+import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -66,8 +72,10 @@ public class AuthService
                 .expiresAt(currentTime.plusSeconds(this.jwtExpiration))
                 .build();
 
+        var header = JwsHeader.with(MacAlgorithm.HS512).build();
+
         String token = jwtEncoder
-                .encode(JwtEncoderParameters.from(claimsSet))
+                .encode(JwtEncoderParameters.from(header, claimsSet))
                 .getTokenValue();
 
         return new LoginResponseDTO(
